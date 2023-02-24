@@ -1,0 +1,193 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenAPI Document on Azure Functions",
+    "version": "1.0.0"
+  },
+  "host": "ppbskopje2023.azurewebsites.net",
+  "basePath": "/api",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [],
+  "produces": [],
+  "paths": {
+    "/signalr/broadcast": {
+      "post": {
+        "tags": [
+          "SignalR "
+        ],
+        "description": "Broadcast message to SignalR",
+        "operationId": "BroadcastMessage",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "JSON request body containing containing { id, productName, isApproved }",
+            "schema": {
+              "$ref": "#/definitions/orderDto"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The No Content response message.",
+            "schema": {
+              "$ref": "#/definitions/void"
+            }
+          }
+        },
+        "summary": "SignalR Broadcast API"
+      }
+    },
+    "/order": {
+      "post": {
+        "tags": [
+          "Order "
+        ],
+        "description": "Create Order",
+        "operationId": "CreateOrder",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "JSON request body containing 'Product Name'",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The OK response message containing a JSON result.",
+            "schema": {
+              "$ref": "#/definitions/order"
+            }
+          }
+        }
+      }
+    },
+    "/orders": {
+      "get": {
+        "tags": [
+          "Order "
+        ],
+        "description": "Get All Orders",
+        "operationId": "GetAllOrders",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "The OK response message containing a JSON result.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/orderDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/order/{id}/{approved}": {
+      "patch": {
+        "tags": [
+          "Order "
+        ],
+        "description": "Approve Order",
+        "operationId": "ApproveOrder",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The **Id** parameter",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "approved",
+            "description": "The **Approved** parameter",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The OK response message containing a JSON result.",
+            "schema": {
+              "$ref": "#/definitions/order"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "order": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "productName": {
+          "type": "string"
+        },
+        "isApproved": {
+          "type": "boolean"
+        },
+        "isInitial": {
+          "type": "boolean"
+        },
+        "createdOnUtc": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "modifiedOnUtc": {
+          "format": "date-time",
+          "type": "string"
+        }
+      }
+    },
+    "orderDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "productName": {
+          "type": "string"
+        },
+        "isApproved": {
+          "type": "boolean"
+        }
+      }
+    },
+    "void": {
+      "type": "object"
+    }
+  },
+  "parameters": {},
+  "responses": {},
+  "securityDefinitions": {},
+  "security": [],
+  "tags": []
+}

@@ -35,16 +35,10 @@ export class PCFSignalR implements ComponentFramework.StandardControl<IInputs, I
         context.parameters.SignalRHubConnectionUrl.raw:"";
 
         console.log(this._signalRApi)
-        console.log('PETARR')
 
         if(this._signalRApi && this._signalRApi.length > 0) {
-            console.log('GO OPEN CONNECTION')
             this.OpenConnection();
-        } else {
-            console.log("LOG: NO URL");
         }
-
-        
     }
 
     private OpenConnection() {
@@ -54,10 +48,8 @@ export class PCFSignalR implements ComponentFramework.StandardControl<IInputs, I
         .configureLogging(signalR.LogLevel.Information) // for debug
         .build();
 
-        console.log("Connection established!")
         //configure the event when a new message arrives
         this.connection.on("newMessage", (message:string) => {
-            console.log("NEW MESSAGE: " + message)
             this._receivedMessage=message;
             this._notifyOutputChanged();
         });
@@ -65,10 +57,10 @@ export class PCFSignalR implements ComponentFramework.StandardControl<IInputs, I
 
         //connect
         this.connection.start()
-        .catch(err => {
-            console.log(err);
-            this.connection.stop();
-        });    
+            .catch(err => {
+                console.log(err);
+                this.connection.stop();
+            });    
     }
 
 
@@ -78,11 +70,7 @@ export class PCFSignalR implements ComponentFramework.StandardControl<IInputs, I
      */
     public updateView(context: ComponentFramework.Context<IInputs>): void
     {
-        //When the MessageToSend is updated this code will run and we send the message to signalR
         this._context = context;
-        let messageToSend= JSON.parse(this._context.parameters.MessageToSend.raw!= null?
-        this._context.parameters.MessageToSend.raw:"");
-        this.httpCall(messageToSend, (res)=>{ console.log(res)});
     }
 
     /**
@@ -110,21 +98,4 @@ export class PCFSignalR implements ComponentFramework.StandardControl<IInputs, I
         // Add code to cleanup control if necessary
         this.connection.stop();
     }
-
-    public httpCall(data:any, callback:(result:any)=>any): void {
-        var xhr = new XMLHttpRequest();
-        xhr.open("post", this._signalRApi+"/signalr/broadcast", true);
-        if (data != null) {
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.send(JSON.stringify(data));
-        }
-        else xhr.send();
-    }
 }
-
-// class ReceivedModel
-// {
-//   sender: string;
-//   text: string;
-//   type:string;
-// }
